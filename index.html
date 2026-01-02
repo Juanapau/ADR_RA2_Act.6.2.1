@@ -415,18 +415,6 @@
             <p style="font-size: 1.3em; margin-top: 10px;">Valor: 2 puntos</p>
         </header>
 
-        <!-- Aviso de configuración -->
-        <div class="config-notice" id="configNotice">
-            <h3>⚙️ Configuración Requerida</h3>
-            <p><strong>Para que esta actividad funcione correctamente y guarde los datos en la nube, debes:</strong></p>
-            <ol style="margin-left: 20px; margin-top: 10px;">
-                <li>Reemplazar la URL de Google Apps Script en la línea 942 del código</li>
-                <li>La URL debe ser la de tu Web App desplegada en Google Apps Script</li>
-                <li>Una vez configurado, este aviso se ocultará automáticamente</li>
-            </ol>
-            <p style="margin-top: 10px;"><strong>Instrucciones detalladas al final del documento HTML.</strong></p>
-        </div>
-
         <div class="info-section">
             <div class="student-info">
                 <div class="form-group">
@@ -734,10 +722,10 @@
 
     <script>
         // ⚠️ IMPORTANTE: Reemplaza esta URL con la URL de tu Google Apps Script Web App
-        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyzoCtgO2hphnNE87x3TMKfmL_wgJPvh8PPDRIBVgE5JlPsBquxPb-EMRF1Ztzm9lqv/exec';
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwqFyln8eTFEMANitSvR0LBpoot2lyQCBaEYfwrVJ5-FenIcvYxAAtZwT-aeZBgj2Sm/exec';
         
         // Verificar si la URL está configurada
-        if (SCRIPT_URL === 'https://script.google.com/macros/s/AKfycbyzoCtgO2hphnNE87x3TMKfmL_wgJPvh8PPDRIBVgE5JlPsBquxPb-EMRF1Ztzm9lqv/exec') {
+        if (SCRIPT_URL === 'https://script.google.com/macros/s/AKfycbwqFyln8eTFEMANitSvR0LBpoot2lyQCBaEYfwrVJ5-FenIcvYxAAtZwT-aeZBgj2Sm/exec') {
             // Mostrar aviso de configuración
             document.getElementById('configNotice').style.display = 'block';
         } else {
