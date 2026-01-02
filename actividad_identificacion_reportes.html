@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Actividad: Identificación de Secciones del Reporte Empresarial</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #c41e3a 0%, #8b0000 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1.1em;
+            opacity: 0.95;
+        }
+
+        .info-section {
+            padding: 30px;
+            background: #f8f9fa;
+            border-bottom: 3px solid #c41e3a;
+        }
+
+        .student-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group label {
+            font-weight: bold;
+            color: #c41e3a;
+            margin-bottom: 5px;
+        }
+
+        .form-group input {
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #c41e3a;
+        }
+
+        .instructions {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #c41e3a;
+            margin-top: 20px;
+        }
+
+        .instructions h3 {
+            color: #c41e3a;
+            margin-bottom: 10px;
+        }
+
+        .instructions ul {
+            margin-left: 20px;
+        }
+
+        .instructions li {
+            margin-bottom: 8px;
+        }
+
+        .activity-section {
+            padding: 30px;
+        }
+
+        .report-example {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border: 2px solid #e0e0e0;
+        }
+
+        .report-section {
+            background: white;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            border: 2px solid #ddd;
+            position: relative;
+        }
+
+        .report-content {
+            color: #555;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+
+        .question-box {
+            background: #fff3f3;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            border: 2px solid #c41e3a;
+        }
+
+        .question-box label {
+            display: block;
+            font-weight: bold;
+            color: #8b0000;
+            margin-bottom: 10px;
+        }
+
+        .question-box select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .question-box select:focus {
+            outline: none;
+            border-color: #c41e3a;
+        }
+
+        .question-box select:hover {
+            border-color: #ff6b6b;
+        }
+
+        .feedback {
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            font-weight: bold;
+            display: none;
+        }
+
+        .feedback.correct {
+            background: #d4edda;
+            color: #155724;
+            border: 2px solid #c3e6cb;
+            display: block;
+        }
+
+        .feedback.incorrect {
+            background: #f8d7da;
+            color: #721c24;
+            border: 2px solid #f5c6cb;
+            display: block;
+        }
+
+        .results-section {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .results-section h2 {
+            color: #ff6b6b;
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+
+        .score-display {
+            font-size: 3em;
+            font-weight: bold;
+            color: #fff;
+            margin: 20px 0;
+        }
+
+        .percentage {
+            font-size: 1.5em;
+            color: #ff6b6b;
+            margin-bottom: 30px;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #c41e3a 0%, #8b0000 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(196, 30, 58, 0.4);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #2d2d2d 0%, #1a1a1a 100%);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+        }
+
+        .btn-teacher {
+            background: linear-gradient(135deg, #ff6b6b 0%, #c41e3a 100%);
+            color: white;
+        }
+
+        .btn-teacher:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .submit-section {
+            padding: 30px;
+            text-align: center;
+            background: #f8f9fa;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+
+        .modal-content h3 {
+            color: #c41e3a;
+            margin-bottom: 20px;
+        }
+
+        .modal-content input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1.2em;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        footer {
+            background: #1a1a1a;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            font-size: 0.9em;
+        }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+            border: 2px solid #c3e6cb;
+            display: none;
+        }
+
+        .section-number {
+            display: inline-block;
+            width: 35px;
+            height: 35px;
+            background: linear-gradient(135deg, #c41e3a, #8b0000);
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 35px;
+            font-weight: bold;
+            font-size: 1.1em;
+            margin-bottom: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .student-info {
+                grid-template-columns: 1fr;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+            }
+
+            header h1 {
+                font-size: 1.5em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📝 Actividad Interactiva</h1>
+            <p>Identificación de Secciones del Reporte Empresarial</p>
+            <p style="font-size: 1.3em; margin-top: 10px;">Valor: 2 puntos</p>
+        </header>
+
+        <div class="info-section">
+            <div class="student-info">
+                <div class="form-group">
+                    <label for="studentName">Nombre del Estudiante:</label>
+                    <input type="text" id="studentName" placeholder="Ingresa tu nombre completo" required>
+                </div>
+                <div class="form-group">
+                    <label for="activityDate">Fecha:</label>
+                    <input type="date" id="activityDate" required>
+                </div>
+            </div>
+
+            <div class="instructions">
+                <h3>📋 Instrucciones:</h3>
+                <ul>
+                    <li>Lee cuidadosamente cada sección del reporte empresarial presentado.</li>
+                    <li>Identifica correctamente qué tipo de sección es cada una.</li>
+                    <li>Selecciona la respuesta correcta en el menú desplegable.</li>
+                    <li>Al finalizar, haz clic en "Enviar Actividad" para ver tu calificación.</li>
+                    <li>Podrás descargar un PDF con tus resultados.</li>
+                    <li>Esta actividad vale 2 puntos en total.</li>
+                    <li><strong>Importante:</strong> Solo puedes enviar la actividad una vez.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="activity-section">
+            <h2 style="color: #c41e3a; margin-bottom: 30px; text-align: center;">Reporte Empresarial Ejemplo</h2>
+            
+            <div class="report-example">
+                <!-- Sección 1 -->
+                <div class="report-section">
+                    <span class="section-number">1</span>
+                    <div class="report-content">
+                        <p style="text-align: center; margin-bottom: 10px;"><strong>TECNOLOGÍA AVANZADA, S.A.</strong></p>
+                        <p style="text-align: center;"><em>Análisis de Productividad del Segundo Semestre 2024</em></p>
+                        <p style="margin-top: 20px;"><strong>Elaborado por:</strong> María Rodríguez</p>
+                        <p><strong>Departamento:</strong> Recursos Humanos</p>
+                        <p><strong>Fecha:</strong> 30 de noviembre de 2024</p>
+                        <p><strong>Dirigido a:</strong> Junta Directiva</p>
+                    </div>
+                    <div class="question-box">
+                        <label>¿Qué sección del reporte es esta?</label>
+                        <select class="answer-select" data-correct="Portada">
+                            <option value="">-- Selecciona una opción --</option>
+                            <option value="Recomendaciones">Recomendaciones</option>
+                            <option value="Bibliografía">Bibliografía</option>
+                            <option value="Introducción">Introducción</option>
+                            <option value="Índice">Índice</option>
+                            <option value="Portada">Portada</option>
+                            <option value="Anexos">Anexos</option>
+                            <option value="Resumen Ejecutivo">Resumen Ejecutivo</option>
+                            <option value="Conclusiones">Conclusiones</option>
+                            <option value="Cuerpo/Desarrollo">Cuerpo/Desarrollo</option>
+                        </select>
+                        <div class="feedback"></div>
+                    </div>
+                </div>
+
+                <!-- Sección 2 -->
+                <div class="report-section">
+                    <span class="section-number">2</span>
+                    <div class="report-content">
+                        <p><strong>CONTENIDO</strong></p>
+                        <p style="margin-top: 15px;">1. Resumen Ejecutivo ........................ 3</p>
+                        <p>2. Introducción ................................ 4</p>
+                        <p>3. Análisis de Productividad ............. 5</p>
+                        <p style="margin-left: 20px;">3.1 Departamento de Ventas ........ 6</p>
+                        <p style="margin-left: 20px;">3.2 Departamento de Producción .. 8</p>
+                        <p>4. Resultados Principales ................. 10</p>
+                        <p>5. Conclusiones ................................ 12</p>
+                        <p>6. Recomendaciones ......................... 13</p>
+                        <p>7. Referencias .................................. 14</p>
+                    </div>
+                    <div class="question-box">
+                        <label>¿Qué sección del reporte es esta?</label>
+                        <select class="answer-select" data-correct="Índice">
+                            <option value="">-- Selecciona una opción --</option>
+                            <option value="Conclusiones">Conclusiones</option>
+                            <option value="Portada">Portada</option>
+                            <option value="Cuerpo/Desarrollo">Cuerpo/Desarrollo</option>
+                            <option value="Índice">Índice</option>
+                            <option value="Bibliografía">Bibliografía</option>
+                            <option value="Anexos">Anexos</option>
+                            <option value="Introducción">Introducción</option>
+                            <option value="Resumen Ejecutivo">Resumen Ejecutivo</option>
+                            <option value="Recomendaciones">Recomendaciones</option>
+                        </select>
+                        <div class="feedback"></div>
+                    </div>
+                </div>
+
+                <!-- Sección 3 -->
+                <div class="report-section">
+                    <span class="section-number">3</span>
+                    <div class="report-content">
+                        <p>Este reporte examina la productividad de Tecnología Avanzada S.A. durante julio-diciembre 2024. Los hallazgos revelan un aumento del 18% en la eficiencia operativa, destacándose el departamento de ventas con un incremento del 25% en conversiones. Se identificaron tres áreas críticas de mejora: optimización de procesos, capacitación continua y actualización tecnológica. Se recomienda implementar un programa de mentorías y adquirir software de gestión de proyectos para el próximo trimestre.</p>
+                    </div>
+                    <div class="question-box">
+                        <label>¿Qué sección del reporte es esta?</label>
+                        <select class="answer-select" data-correct="Resumen Ejecutivo">
+                            <option value="">-- Selecciona una opción --</option>
+                            <option value="Anexos">Anexos</option>
+                            <option value="Introducción">Introducción</option>
+                            <option value="Recomendaciones">Recomendaciones</option>
+                            <option value="Índice">Índice</option>
+                            <option value="Resumen Ejecutivo">Resumen Ejecutivo</option>
+                            <option value="Portada">Portada</option>
+                            <option value="Bibliografía">Bibliografía</option>
+                            <option value="Cuerpo/Desarrollo">Cuerpo/Desarrollo</option>
+                            <option value="Conclusiones">Conclusiones</option>
+                        </select>
+                        <div class="feedback"></div>
+                    </div>
+                </div>
+
+                <!-- Sección 4 -->
+                <div class="report-section">
+                    <span class="section-number">4</span>
+                    <div class="report-content">
+                        <p>El presente estudio tiene como objetivo evaluar los niveles de productividad alcanzados por Tecnología Avanzada S.A. durante el segundo semestre de 2024. El análisis abarca todos los departamentos operativos de la empresa y examina indicadores clave de rendimiento (KPI). La metodología empleada incluye la recopilación de datos mediante el sistema ERP corporativo, entrevistas con jefes de departamento y encuestas de satisfacción laboral aplicadas a 150 empleados. Este reporte proporcionará información valiosa para la toma de decisiones estratégicas del próximo año fiscal.</p>
+                    </div>
+                    <div class="question-box">
+                        <label>¿Qué sección del reporte es esta?</label>
+                        <select class="answer-select" data-correct="Introducción">
+                            <option value="">-- Selecciona una opción --</option>
+                            <option value="Bibliografía">Bibliografía</option>
+                            <option value="Resumen Ejecutivo">Resumen Ejecutivo</option>
+                            <option value="Portada">Portada</option>
+                            <option value="Cuerpo/Desarrollo">Cuerpo/Desarrollo</option>
+                            <option value="Introducción">Introducción</option>
+                            <option value="Conclusiones">Conclusiones</option>
+                            <option value="Índice">Índice</option>
+                            <option value="Anexos">Anexos</option>
+                            <option value="Recomendaciones">Recomendaciones</option>
+                        </select>
+                        <div class="feedback"></div>
+                    </div>
+                </div>
+
+                <!-- Sección 5 -->
+                <div class="report-section">
+                    <span class="section-number">5</span>
+                    <div class="report-content">
+                        <p><strong>3. ANÁLISIS DE PRODUCTIVIDAD POR DEPARTAMENTO</strong></p>
+                        <p style="margin-top: 15px;"><strong>3.1 Departamento de Ventas</strong></p>
+                        <p>El equipo de ventas alcanzó RD$12,500,000 en ingresos (35% del total corporativo), superando la meta trimestral en un 15%. La tasa de conversión mejoró del 18% al 25%, atribuible a la implementación del nuevo CRM y las capacitaciones mensuales. El tiempo promedio de cierre de ventas se redujo de 45 a 32 días.</p>
+                        <p style="margin-top: 15px;"><strong>3.2 Departamento de Producción</strong></p>
+                        <p>La producción aumentó en 12% comparado con el primer semestre. Se manufacturaron 15,000 unidades con una tasa de defectos del 2.1% (objetivo: 3%). La eficiencia de maquinaria alcanzó 87%, mejorando 5 puntos porcentuales gracias al programa de mantenimiento preventivo implementado en agosto.</p>
+                    </div>
+                    <div class="question-box">
+                        <label>¿Qué sección del reporte es esta?</label>
+                        <select class="answer-select" data-correct="Cuerpo/Desarrollo">
+                            <option value="">-- Selecciona una opción --</option>
+                            <option value="Portada">Portada</option>
+                            <option value="Conclusiones">Conclusiones</option>
+                            <option value="Índice">Índice</option>
+                            <option value="Recomendaciones">Recomendaciones</option>
+                            <option value="Cuerpo/Desarrollo">Cuerpo/Desarrollo</option>
+                            <option value="Bibliografía">Bibliografía</option>
+                            <option value="Introducción">Introducción</option>
+                            <option value="Resumen Ejecutivo">Resumen Ejecutivo</option>
+                            <option value="Anexos">Anexos</option>
+                        </select>
+                        <div class="feedback"></div>
+                    </div>
+                </div>
+
+                <!-- Sección 6 -->
+                <div class="report-section">
+                    <span class="section-number">6</span>
+                    <div class="report-content">
+                        <p><strong>CONCLUSIONES PRINCIPALES:</strong></p>
+                        <p style="margin-top: 15px;">1. La productividad general de la empresa experimentó un crecimiento sostenido del 18% durante el segundo semestre de 2024, superando las proyecciones iniciales del 12%.</p>
+                        <p style="margin-top: 10px;">2. El departamento de ventas se consolidó como el área de mayor rendimiento, alcanzando un incremento del 25% en la tasa de conversión y reduciendo significativamente los tiempos de cierre.</p>
+                        <p style="margin-top: 10px;">3. La implementación de tecnologías de gestión (CRM y ERP) demostró ser un factor determinante en la mejora de la eficiencia operativa.</p>
+                        <p style="margin-top: 10px;">4. Persisten desafíos en la capacitación técnica del personal de producción y en la actualización de equipos obsoletos.</p>
+                    </div>
+                    <div class="question-box">
+                        <label>¿Qué sección del reporte es esta?</label>
+                        <select class="answer-select" data-correct="Conclusiones">
+                            <option value="">-- Selecciona una opción --</option>
+                            <option value="Introducción">Introducción</option>
+                            <option value="Cuerpo/Desarrollo">Cuerpo/Desarrollo</option>
+                            <option value="Anexos">Anexos</option>
+                            <option value="Conclusiones">Conclusiones</option>
+                            <option value="Resumen Ejecutivo">Resumen Ejecutivo</option>
+                            <option value="Recomendaciones">Recomendaciones</option>
+                            <option value="Índice">Índice</option>
+                            <option value="Bibliografía">Bibliografía</option>
+                            <option value="Portada">Portada</option>
+                        </select>
+                        <div class="feedback"></div>
+                    </div>
+                </div>
+
+                <!-- Sección 7 -->
+                <div class="report-section">
+                    <span class="section-number">7</span>
+                    <div class="report-content">
+                        <p><strong>ACCIONES SUGERIDAS:</strong></p>
+                        <p style="margin-top: 15px;">1. Expandir el programa de capacitación en herramientas CRM al departamento de servicio al cliente durante el primer trimestre de 2025, con una inversión proyectada de RD$250,000.</p>
+                        <p style="margin-top: 10px;">2. Implementar un sistema de mentorías cruzadas entre los departamentos de ventas y producción para transferir mejores prácticas operativas.</p>
+                        <p style="margin-top: 10px;">3. Adquirir e instalar tres líneas de producción automatizadas antes del cierre del segundo trimestre de 2025 para incrementar la capacidad productiva en un 30%.</p>
+                        <p style="margin-top: 10px;">4. Desarrollar un programa de incentivos basado en resultados que recompense la eficiencia individual y grupal, con un presupuesto anual de RD$500,000.</p>
+                    </div>
+                    <div class="question-box">
+                        <label>¿Qué sección del reporte es esta?</label>
+                        <select class="answer-select" data-correct="Recomendaciones">
+                            <option value="">-- Selecciona una opción --</option>
+                            <option value="Resumen Ejecutivo">Resumen Ejecutivo</option>
+                            <option value="Índice">Índice</option>
+                            <option value="Recomendaciones">Recomendaciones</option>
+                            <option value="Portada">Portada</option>
+                            <option value="Bibliografía">Bibliografía</option>
+                            <option value="Anexos">Anexos</option>
+                            <option value="Introducción">Introducción</option>
+                            <option value="Conclusiones">Conclusiones</option>
+                            <option value="Cuerpo/Desarrollo">Cuerpo/Desarrollo</option>
+                        </select>
+                        <div class="feedback"></div>
+                    </div>
+                </div>
+
+                <!-- Sección 8 -->
+                <div class="report-section">
+                    <span class="section-number">8</span>
+                    <div class="report-content">
+                        <p><strong>DOCUMENTOS COMPLEMENTARIOS:</strong></p>
+                        <p style="margin-top: 15px;">Anexo A: Tabla detallada de productividad mensual por departamento (julio-diciembre 2024)</p>
+                        <p>Anexo B: Gráficos comparativos de rendimiento 2023 vs 2024</p>
+                        <p>Anexo C: Resultados completos de la encuesta de satisfacción laboral (150 participantes)</p>
+                        <p>Anexo D: Cotizaciones de equipos de producción de tres proveedores</p>
+                        <p>Anexo E: Plan detallado del programa de capacitación propuesto</p>
+                        <p>Anexo F: Fotografías del evento de reconocimiento al personal destacado</p>
+                    </div>
+                    <div class="question-box">
+                        <label>¿Qué sección del reporte es esta?</label>
+                        <select class="answer-select" data-correct="Anexos">
+                            <option value="">-- Selecciona una opción --</option>
+                            <option value="Cuerpo/Desarrollo">Cuerpo/Desarrollo</option>
+                            <option value="Conclusiones">Conclusiones</option>
+                            <option value="Bibliografía">Bibliografía</option>
+                            <option value="Introducción">Introducción</option>
+                            <option value="Anexos">Anexos</option>
+                            <option value="Portada">Portada</option>
+                            <option value="Índice">Índice</option>
+                            <option value="Resumen Ejecutivo">Resumen Ejecutivo</option>
+                            <option value="Recomendaciones">Recomendaciones</option>
+                        </select>
+                        <div class="feedback"></div>
+                    </div>
+                </div>
+
+                <!-- Sección 9 -->
+                <div class="report-section">
+                    <span class="section-number">9</span>
+                    <div class="report-content">
+                        <p><strong>REFERENCIAS CONSULTADAS:</strong></p>
+                        <p style="margin-top: 15px;">Chiavenato, I. (2023). <em>Gestión del talento humano</em> (5ta ed.). McGraw-Hill Educación.</p>
+                        <p style="margin-top: 10px;">Hernández, R. & Sánchez, M. (2024). Indicadores de productividad en empresas tecnológicas dominicanas. <em>Revista Empresarial del Caribe</em>, 28(3), 112-135.</p>
+                        <p style="margin-top: 10px;">Ministerio de Industria y Comercio. (2024). <em>Estándares de productividad sectorial 2024</em>. https://www.micm.gob.do/estadisticas</p>
+                        <p style="margin-top: 10px;">Porter, M. (2023). <em>Ventaja competitiva: Creación y sostenimiento de un desempeño superior</em>. Grupo Editorial Patria.</p>
+                    </div>
+                    <div class="question-box">
+                        <label>¿Qué sección del reporte es esta?</label>
+                        <select class="answer-select" data-correct="Bibliografía">
+                            <option value="">-- Selecciona una opción --</option>
+                            <option value="Anexos">Anexos</option>
+                            <option value="Portada">Portada</option>
+                            <option value="Introducción">Introducción</option>
+                            <option value="Recomendaciones">Recomendaciones</option>
+                            <option value="Bibliografía">Bibliografía</option>
+                            <option value="Resumen Ejecutivo">Resumen Ejecutivo</option>
+                            <option value="Índice">Índice</option>
+                            <option value="Conclusiones">Conclusiones</option>
+                            <option value="Cuerpo/Desarrollo">Cuerpo/Desarrollo</option>
+                        </select>
+                        <div class="feedback"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="submit-section">
+            <button class="btn btn-primary" id="submitBtn" onclick="submitActivity()">
+                📤 Enviar Actividad
+            </button>
+            <div class="success-message" id="successMessage">
+                ✅ ¡Actividad enviada exitosamente!
+            </div>
+        </div>
+
+        <div class="results-section" id="resultsSection">
+            <h2>📊 Resultados de la Actividad</h2>
+            <div class="score-display" id="scoreDisplay">0.00 / 2.00</div>
+            <div class="percentage" id="percentageDisplay">0%</div>
+            
+            <div class="button-group">
+                <button class="btn btn-secondary" onclick="downloadPDF()">
+                    📥 Descargar Mi PDF
+                </button>
+                <button class="btn btn-teacher" onclick="showPinModal()">
+                    👩‍🏫 Reporte de Maestra (PIN)
+                </button>
+            </div>
+        </div>
+
+        <footer>
+            <p>📘 Material Educativo - Análisis y Diseño de Reportes</p>
+            <p>Centro Educativo Nuestra Sra. De la Altagracia</p>
+            <p>Desarrollo y Administración de Aplicaciones Informáticas</p>
+        </footer>
+    </div>
+
+    <!-- Modal PIN -->
+    <div class="modal" id="pinModal">
+        <div class="modal-content">
+            <h3>🔐 Acceso de Maestra</h3>
+            <p>Ingresa el PIN para generar el reporte:</p>
+            <input type="password" id="pinInput" placeholder="Ingresa el PIN" maxlength="4">
+            <div class="modal-buttons">
+                <button class="btn btn-primary" onclick="verifyPIN()">Confirmar</button>
+                <button class="btn btn-secondary" onclick="closePinModal()">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Configurar fecha actual
+        document.getElementById('activityDate').valueAsDate = new Date();
+
+        // Variables globales
+        let studentResults = {
+            name: '',
+            date: '',
+            answers: [],
+            score: 0,
+            percentage: 0,
+            timestamp: ''
+        };
+
+        let activitySubmitted = false;
+
+        // LocalStorage key para almacenar resultados
+        const STORAGE_KEY = 'reportes_actividad_resultados';
+
+        // Función para validar respuestas
+        function validateAnswers() {
+            const selects = document.querySelectorAll('.answer-select');
+            let correctCount = 0;
+            studentResults.answers = [];
+
+            selects.forEach((select, index) => {
+                const correctAnswer = select.dataset.correct;
+                const studentAnswer = select.value;
+                const feedback = select.parentElement.querySelector('.feedback');
+                
+                const result = {
+                    section: (index + 1), // 1, 2, 3, etc.
+                    correct: correctAnswer,
+                    student: studentAnswer,
+                    isCorrect: studentAnswer === correctAnswer
+                };
+                
+                studentResults.answers.push(result);
+
+                if (studentAnswer === correctAnswer) {
+                    correctCount++;
+                    feedback.textContent = '✓ ¡Correcto!';
+                    feedback.className = 'feedback correct';
+                } else if (studentAnswer === '') {
+                    feedback.textContent = '⚠ Debes seleccionar una respuesta';
+                    feedback.className = 'feedback incorrect';
+                } else {
+                    feedback.textContent = `✗ Incorrecto. La respuesta correcta es: ${correctAnswer}`;
+                    feedback.className = 'feedback incorrect';
+                }
+            });
+
+            return correctCount;
+        }
+
+        // Función para enviar actividad
+        function submitActivity() {
+            if (activitySubmitted) {
+                alert('Ya has enviado esta actividad. Solo puedes enviarla una vez.');
+                return;
+            }
+
+            const name = document.getElementById('studentName').value.trim();
+            const date = document.getElementById('activityDate').value;
+
+            if (!name) {
+                alert('Por favor, ingresa tu nombre antes de enviar.');
+                document.getElementById('studentName').focus();
+                return;
+            }
+
+            if (!date) {
+                alert('Por favor, selecciona la fecha.');
+                document.getElementById('activityDate').focus();
+                return;
+            }
+
+            // Validar que todas las preguntas estén respondidas
+            const selects = document.querySelectorAll('.answer-select');
+            let allAnswered = true;
+            selects.forEach(select => {
+                if (!select.value) {
+                    allAnswered = false;
+                }
+            });
+
+            if (!allAnswered) {
+                alert('Por favor, responde todas las preguntas antes de enviar.');
+                return;
+            }
+
+            // Validar respuestas
+            const correctCount = validateAnswers();
+            const totalQuestions = 9;
+            const score = (correctCount / totalQuestions) * 2; // Calcular sobre 2 puntos
+            const percentage = (correctCount / totalQuestions) * 100;
+
+            // Guardar resultados
+            studentResults.name = name;
+            studentResults.date = date;
+            studentResults.score = score.toFixed(2);
+            studentResults.percentage = percentage.toFixed(0);
+            studentResults.timestamp = new Date().toISOString();
+
+            // Guardar en localStorage
+            saveResults(studentResults);
+
+            // Marcar como enviada
+            activitySubmitted = true;
+
+            // Deshabilitar el botón de enviar y los selectores
+            document.getElementById('submitBtn').disabled = true;
+            document.getElementById('studentName').disabled = true;
+            document.getElementById('activityDate').disabled = true;
+            selects.forEach(select => select.disabled = true);
+
+            // Mostrar resultados
+            document.getElementById('scoreDisplay').textContent = `${score.toFixed(2)} / 2.00`;
+            document.getElementById('percentageDisplay').textContent = `${percentage.toFixed(0)}% de respuestas correctas`;
+            
+            // Mostrar sección de resultados
+            document.getElementById('resultsSection').style.display = 'block';
+            document.getElementById('successMessage').style.display = 'block';
+
+            // Scroll a resultados
+            document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Guardar resultados en localStorage
+        function saveResults(results) {
+            let allResults = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+            allResults.push(results);
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(allResults));
+        }
+
+        // Obtener todos los resultados
+        function getAllResults() {
+            return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+        }
+
+        // Generar PDF del estudiante
+        function downloadPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            // Configuración
+            const pageWidth = doc.internal.pageSize.width;
+            let yPos = 20;
+
+            // Encabezado
+            doc.setFillColor(196, 30, 58);
+            doc.rect(0, 0, pageWidth, 35, 'F');
+            
+            doc.setTextColor(255, 255, 255);
+            doc.setFontSize(18);
+            doc.text('Resultados de Actividad', pageWidth / 2, 15, { align: 'center' });
+            
+            doc.setFontSize(12);
+            doc.text('Identificación de Secciones del Reporte Empresarial', pageWidth / 2, 25, { align: 'center' });
+
+            // Información del estudiante
+            yPos = 50;
+            doc.setTextColor(0, 0, 0);
+            doc.setFontSize(12);
+            doc.setFont(undefined, 'bold');
+            doc.text('Información del Estudiante:', 20, yPos);
+            
+            doc.setFont(undefined, 'normal');
+            yPos += 10;
+            doc.text(`Nombre: ${studentResults.name}`, 20, yPos);
+            yPos += 7;
+            doc.text(`Fecha: ${studentResults.date}`, 20, yPos);
+            yPos += 7;
+            doc.text(`Hora de envío: ${new Date(studentResults.timestamp).toLocaleString('es-DO')}`, 20, yPos);
+
+            // Calificación
+            yPos += 15;
+            doc.setFillColor(240, 240, 240);
+            doc.rect(15, yPos - 5, pageWidth - 30, 25, 'F');
+            
+            doc.setFontSize(14);
+            doc.setFont(undefined, 'bold');
+            doc.text(`Calificación: ${studentResults.score} / 2.00 puntos`, 20, yPos + 5);
+            doc.text(`Porcentaje: ${studentResults.percentage}%`, 20, yPos + 15);
+
+            // Respuestas detalladas
+            yPos += 35;
+            doc.setFontSize(12);
+            doc.text('Detalle de Respuestas:', 20, yPos);
+            
+            yPos += 10;
+            doc.setFontSize(10);
+            doc.setFont(undefined, 'normal');
+
+            studentResults.answers.forEach((answer, index) => {
+                if (yPos > 270) {
+                    doc.addPage();
+                    yPos = 20;
+                }
+
+                const status = answer.isCorrect ? '✓ Correcto' : '✗ Incorrecto';
+                const color = answer.isCorrect ? [46, 125, 50] : [198, 40, 40];
+                
+                doc.setTextColor(...color);
+                doc.text(`Sección ${answer.section}: ${status}`, 20, yPos);
+                
+                doc.setTextColor(0, 0, 0);
+                yPos += 5;
+                doc.text(`Tu respuesta: ${answer.student}`, 25, yPos);
+                
+                if (!answer.isCorrect) {
+                    yPos += 5;
+                    doc.setTextColor(100, 100, 100);
+                    doc.text(`Respuesta correcta: ${answer.correct}`, 25, yPos);
+                }
+                
+                yPos += 10;
+            });
+
+            // Footer
+            const finalY = doc.internal.pageSize.height - 20;
+            doc.setFontSize(9);
+            doc.setTextColor(100, 100, 100);
+            doc.text('Centro Educativo Nuestra Sra. De la Altagracia', pageWidth / 2, finalY, { align: 'center' });
+            doc.text('Desarrollo y Administración de Aplicaciones Informáticas', pageWidth / 2, finalY + 5, { align: 'center' });
+
+            // Descargar
+            doc.save(`Actividad_Reportes_${studentResults.name.replace(/\s+/g, '_')}.pdf`);
+        }
+
+        // Mostrar modal de PIN
+        function showPinModal() {
+            document.getElementById('pinModal').style.display = 'flex';
+            document.getElementById('pinInput').value = '';
+            document.getElementById('pinInput').focus();
+        }
+
+        // Cerrar modal de PIN
+        function closePinModal() {
+            document.getElementById('pinModal').style.display = 'none';
+        }
+
+        // Verificar PIN
+        function verifyPIN() {
+            const pin = document.getElementById('pinInput').value;
+            
+            if (pin === '1070') {
+                closePinModal();
+                generateTeacherReport();
+            } else {
+                alert('PIN incorrecto. Solo la maestra tiene acceso a este reporte.');
+                document.getElementById('pinInput').value = '';
+                document.getElementById('pinInput').focus();
+            }
+        }
+
+        // Generar reporte de maestra
+        function generateTeacherReport() {
+            const allResults = getAllResults();
+            
+            if (allResults.length === 0) {
+                alert('No hay resultados de estudiantes para generar el reporte.');
+                return;
+            }
+
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            const pageWidth = doc.internal.pageSize.width;
+            let yPos = 20;
+
+            // Encabezado
+            doc.setFillColor(196, 30, 58);
+            doc.rect(0, 0, pageWidth, 35, 'F');
+            
+            doc.setTextColor(255, 255, 255);
+            doc.setFontSize(16);
+            doc.text('Reporte de Maestra', pageWidth / 2, 15, { align: 'center' });
+            
+            doc.setFontSize(11);
+            doc.text('Actividad: Identificación de Secciones del Reporte Empresarial', pageWidth / 2, 25, { align: 'center' });
+
+            // Resumen general
+            yPos = 50;
+            doc.setTextColor(0, 0, 0);
+            doc.setFontSize(12);
+            doc.setFont(undefined, 'bold');
+            doc.text('Resumen General:', 20, yPos);
+            
+            doc.setFont(undefined, 'normal');
+            yPos += 10;
+            doc.text(`Total de estudiantes: ${allResults.length}`, 20, yPos);
+            
+            const avgScore = (allResults.reduce((sum, r) => sum + parseFloat(r.score), 0) / allResults.length).toFixed(2);
+            yPos += 7;
+            doc.text(`Promedio general: ${avgScore} / 2.00 puntos`, 20, yPos);
+            
+            yPos += 7;
+            doc.text(`Fecha de generación: ${new Date().toLocaleString('es-DO')}`, 20, yPos);
+
+            // Lista de estudiantes
+            yPos += 15;
+            doc.setFontSize(12);
+            doc.setFont(undefined, 'bold');
+            doc.text('Resultados por Estudiante:', 20, yPos);
+
+            yPos += 10;
+            doc.setFontSize(9);
+            doc.setFont(undefined, 'normal');
+
+            // Encabezados de tabla
+            doc.setFont(undefined, 'bold');
+            doc.text('#', 20, yPos);
+            doc.text('Nombre', 30, yPos);
+            doc.text('Fecha', 110, yPos);
+            doc.text('Puntos', 150, yPos);
+            doc.text('%', 175, yPos);
+            
+            yPos += 5;
+            doc.line(20, yPos, pageWidth - 20, yPos);
+            yPos += 5;
+
+            doc.setFont(undefined, 'normal');
+
+            allResults.forEach((result, index) => {
+                if (yPos > 270) {
+                    doc.addPage();
+                    yPos = 20;
+                }
+
+                doc.text(`${index + 1}`, 20, yPos);
+                doc.text(result.name.substring(0, 35), 30, yPos);
+                doc.text(result.date, 110, yPos);
+                doc.text(result.score, 150, yPos);
+                doc.text(`${result.percentage}%`, 175, yPos);
+                
+                yPos += 7;
+            });
+
+            // Footer
+            const finalY = doc.internal.pageSize.height - 20;
+            doc.setFontSize(9);
+            doc.setTextColor(100, 100, 100);
+            doc.text('Centro Educativo Nuestra Sra. De la Altagracia', pageWidth / 2, finalY, { align: 'center' });
+            doc.text('Reporte generado por Prof. Juana Alt. Paulino', pageWidth / 2, finalY + 5, { align: 'center' });
+
+            // Descargar
+            doc.save(`Reporte_Maestra_Actividad_Reportes_${new Date().toISOString().split('T')[0]}.pdf`);
+        }
+
+        // Event listener para Enter en PIN
+        document.getElementById('pinInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                verifyPIN();
+            }
+        });
+    </script>
+</body>
+</html>
