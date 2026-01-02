@@ -415,6 +415,7 @@
             <p style="font-size: 1.3em; margin-top: 10px;">Valor: 2 puntos</p>
         </header>
 
+
         <div class="info-section">
             <div class="student-info">
                 <div class="form-group">
@@ -425,6 +426,19 @@
                     <label for="activityDate">Fecha:</label>
                     <input type="date" id="activityDate" required>
                 </div>
+            </div>
+
+            <div class="instructions">
+                <h3>📋 Instrucciones:</h3>
+                <ul>
+                    <li>Lee cuidadosamente cada sección del reporte empresarial presentado.</li>
+                    <li>Identifica correctamente qué tipo de sección es cada una.</li>
+                    <li>Selecciona la respuesta correcta en el menú desplegable.</li>
+                    <li>Al finalizar, haz clic en "Enviar Actividad" para ver tu calificación.</li>
+                    <li>Podrás descargar un PDF con tus resultados.</li>
+                    <li>Esta actividad vale 2 puntos en total.</li>
+                    <li><strong>Importante:</strong> Solo puedes enviar la actividad una vez.</li>
+                </ul>
             </div>
         </div>
 
@@ -704,6 +718,7 @@
                 </button>
             </div>
         </div>
+
     </div>
 
     <!-- Modal PIN -->
@@ -725,7 +740,7 @@
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwqFyln8eTFEMANitSvR0LBpoot2lyQCBaEYfwrVJ5-FenIcvYxAAtZwT-aeZBgj2Sm/exec';
         
         // Verificar si la URL está configurada
-        if (SCRIPT_URL === 'https://script.google.com/macros/s/AKfycbwqFyln8eTFEMANitSvR0LBpoot2lyQCBaEYfwrVJ5-FenIcvYxAAtZwT-aeZBgj2Sm/exec') {
+        if (SCRIPT_URL === 'TU_URL_DE_GOOGLE_APPS_SCRIPT_AQUI') {
             // Mostrar aviso de configuración
             document.getElementById('configNotice').style.display = 'block';
         } else {
